@@ -16,7 +16,7 @@ from kep.policies import (
 ) 
 
 # Configuration Dictionary for each solver
-SOLVER_CONFIGS = {
+POLICY_CONFIGS = {
     "hier_with_wt": {
         "func": policy_kep_hier_with_wt.solver,
         "folder": "kep_hier_with_wt",
@@ -44,11 +44,11 @@ SOLVER_CONFIGS = {
 }
 
 def run_simulation(solver_key):
-    if solver_key not in SOLVER_CONFIGS:
-        print(f"Error: Solver '{solver_key}' not found. Choose from: {list(SOLVER_CONFIGS.keys())}")
+    if solver_key not in POLICY_CONFIGS:
+        print(f"Error: Solver '{solver_key}' not found. Choose from: {list(POLICY_CONFIGS.keys())}")
         return
 
-    config = SOLVER_CONFIGS[solver_key]
+    config = POLICY_CONFIGS[solver_key]
 
     # Simulation Settings
     n_instances = NUMBER_OF_INSTANCES
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     # Options: "hier_with_wt", "hier_no_wt", "max_cardinality", "static"
     if len(sys.argv) > 1:
         parser = argparse.ArgumentParser(description="Run KEP Simulation")
-        parser.add_argument("solver", choices=list(SOLVER_CONFIGS.keys()) + ["all", "all_dynamic"], help="Which solver to run")
+        parser.add_argument("solver", choices=list(POLICY_CONFIGS.keys()) + ["all", "all_dynamic"], help="Which solver to run")
         args = parser.parse_args()
 
         selection = args.solver
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # If no arguments passed (Interactive Mode)
     else:
         print("\n--- KEP Simulation Selector ---")
-        options = list(SOLVER_CONFIGS.keys()) + ["all", "all_dynamic"]
+        options = list(POLICY_CONFIGS.keys()) + ["all", "all_dynamic"]
 
         for i, opt in enumerate(options, 1):
             if opt == "all":
@@ -133,7 +133,7 @@ if __name__ == "__main__":
             elif opt == "all_dynamic":
                 name = "Run ALL Dynamic Solvers (No Static)"
             else:
-                name = SOLVER_CONFIGS[opt]['name']
+                name = POLICY_CONFIGS[opt]['name']
 
             print(f"{i}. {name} ({opt})")
 
@@ -150,12 +150,12 @@ if __name__ == "__main__":
 
     # Execution Logic
     if selection == "all":
-        for key in SOLVER_CONFIGS.keys():
+        for key in POLICY_CONFIGS.keys():
             run_simulation(key)
             
     elif selection == "all_dynamic":
         # Loop through configs and run only if is_static is False
-        for key, config in SOLVER_CONFIGS.items():
+        for key, config in POLICY_CONFIGS.items():
             if not config['is_static']:
                 run_simulation(key)
                 
