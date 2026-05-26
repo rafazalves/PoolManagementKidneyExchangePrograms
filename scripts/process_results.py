@@ -1532,37 +1532,9 @@ def run_analysis(policy_key):
                 print("Skipping Pool Evolution for 'static' policy.")
 
             # ===========================================================================================
-            # EXTRA ANALYSIS: (Only for Year 24) AFTER WARM-UP, FIRST 20 EPOCHS & LAST 20 EPOCHS
+            # EXTRA ANALYSIS: (Only for Year 24) FIRST 20 EPOCHS & LAST 20 EPOCHS
             # ===========================================================================================
             if year == 24 and policy_key != "static":
-                # AFTER WARM-UP
-                warm_up_epoch = 25
-                print(f"\n [EXTRA] Running 'After Warm-Up' Analysis (Epochs > {warm_up_epoch})...")
-
-                warmup_output_dir = os.path.join(output_dir, "after_warm_up")
-                if not os.path.exists(warmup_output_dir):
-                    os.makedirs(warmup_output_dir)
-
-                # Filter Data
-                results_wu = results_df[results_df["Epoch"] > warm_up_epoch].copy()
-                
-                if "Epoch" in history_df.columns:
-                    history_wu = history_df[history_df["Epoch"] > warm_up_epoch].copy()
-                else:
-                    history_wu = history_df.copy() # Fallback
-
-                if not results_wu.empty and not history_wu.empty:
-                    analyze_performance(results_wu, warmup_output_dir)
-                    analyze_outcomes(history_wu, warmup_output_dir)
-                    analyze_match_types(history_wu, warmup_output_dir)
-                    analyze_demographics(history_wu, warmup_output_dir)
-                    analyze_waiting_times_top_10_percent(history_wu, warmup_output_dir)
-                    analyze_waiting_times_top10_by_compatibility(history_wu, warmup_output_dir)
-                    analyze_waiting_times(history_wu, warmup_output_dir)
-                    print(f"Saved 'After Warm-Up' analysis to: {warmup_output_dir}")
-                else:
-                    print(" [SKIP] No data left after warm-up filtering.")
-
                 # LAST 20 EPOCHS
                 max_epoch = results_df["Epoch"].max()
                 cutoff_epoch = max_epoch - 20
