@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kep"
+version = "1.0.0"
+description = "Simulation and optimization models for Kidney Exchange Programs (KEPs)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+authors = [
+    { name = "Rafael Alves" }
+]
+
+keywords = [
+    "Kidney Exchange Programs",
+    "Integer Linear Programming",
+    "Optimization",
+    "Simulation",
+    "Prioritization Strategies",
+    "Immunosuppression",
+    "Healthcare Equity"
+]
+
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "numpy",
+    "gurobipy",
+    "pandas",
+    "matplotlib",
+    "seaborn"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --cov=kep --cov-report=term-missing"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.ruff]
+select = ["E", "F", "W", "I"]
