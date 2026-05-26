@@ -116,7 +116,7 @@ def load_matched_data(input_dir):
 
 def analyze_performance(results_df, output_dir):
     """
-    Analyse the solver"s performance (execution time).
+    Analyse the system performance (execution time).
     Generate two CSV files:
     1. solver_time_per_instance.csv: Average time per epoch for each instance.
     2. solver_time_summary.csv: Global average, standard deviation, and confidence interval.
@@ -1461,25 +1461,25 @@ def analyze_outcomes_binned_histogram_incompatible(history_df, output_dir):
     hist_df.to_csv(file_path, index=False)
     print(f"-> Saved: {file_path}")
 
-def run_analysis(solver_key):
-    # Verify if the provided solver key exists in the configuration
-    if solver_key not in POLICY_CONFIGS:
-        print(f"Solver key '{solver_key}' not found in configuration.")
+def run_analysis(policy_key):
+    # Verify if the provided policy key exists in the configuration
+    if policy_key not in POLICY_CONFIGS:
+        print(f"Policy key '{policy_key}' not found in configuration.")
         return
     
-    config = POLICY_CONFIGS[solver_key]
-    solver_name = config["name"]
-    solver_folder = config["folder"]
+    config = POLICY_CONFIGS[policy_key]
+    policy_name = config["name"]
+    policy_folder = config["folder"]
 
     print(f"==========================================")
-    print(f"Starting Analysis for Solver: {solver_name}")
+    print(f"Starting Analysis for Policy: {policy_name}")
     print(f"==========================================")
 
     # 1. Loop for each year scenario
     for year in YEARS:
-        # Skip "static" solver for Year 24 (didn't run it for 24 years)
-        if solver_key == "static" and year == 24:
-            print(f"Skipping execution for {solver_key} at {year} years.")
+        # Skip "static" policy for Year 24 (didn't run it for 24 years)
+        if policy_key == "static" and year == 24:
+            print(f"Skipping execution for {policy_key} at {year} years.")
             continue
 
         print(f"\n>>> Analyzing Year Scenario: {year} Years <<<")
@@ -1487,7 +1487,7 @@ def run_analysis(solver_key):
         # 2. Loop for each acceptance rate (0, 25, 50, 75, 100)
         for acceptance in ACCEPTANCE_RATES:
             
-            folder_relative_path = f"{year}_year_simulation/{solver_folder}/{acceptance}_acceptance"
+            folder_relative_path = f"{year}_year_simulation/{policy_folder}/{acceptance}_acceptance"
             input_dir = os.path.join(BASE_RESULTS_DIR, folder_relative_path)
             output_dir = os.path.join(BASE_OUTPUT_DIR, folder_relative_path)
 
@@ -1519,7 +1519,7 @@ def run_analysis(solver_key):
             analyze_incompatible_kidney_sources(history_df, matched_df, output_dir)
             analyze_high_pra_incomp_kidney_sources(history_df, matched_df, output_dir)
 
-            if solver_key != "static":
+            if policy_key != "static":
                 analyze_waiting_times_top_10_percent(history_df, output_dir)
                 analyze_waiting_times_top10_by_compatibility(history_df, output_dir)
 
@@ -1529,12 +1529,12 @@ def run_analysis(solver_key):
                 
                 analyze_pool_evolution(results_df, history_df, output_dir)
             else:
-                print("Skipping Pool Evolution for 'static' solver.")
+                print("Skipping Pool Evolution for 'static' policy.")
 
             # ===========================================================================================
             # EXTRA ANALYSIS: (Only for Year 24) AFTER WARM-UP, FIRST 20 EPOCHS & LAST 20 EPOCHS
             # ===========================================================================================
-            if year == 24 and solver_key != "static":
+            if year == 24 and policy_key != "static":
                 # AFTER WARM-UP
                 warm_up_epoch = 25
                 print(f"\n [EXTRA] Running 'After Warm-Up' Analysis (Epochs > {warm_up_epoch})...")
@@ -1642,7 +1642,7 @@ def run_analysis(solver_key):
                 else:
                     print(" [SKIP] No data left after first 20 epochs filtering.")            
 
-    print(f"\nResults for {solver_name} processed successfully.")
+    print(f"\nResults for {policy_name} processed successfully.")
 
 if __name__ == "__main__":
 
@@ -1651,9 +1651,9 @@ if __name__ == "__main__":
     # Arguments Mode
     if len(sys.argv) > 1:
         parser = argparse.ArgumentParser(description="Analyze KEP Results")
-        parser.add_argument("solver", choices=list(POLICY_CONFIGS.keys()) + ["all"], help="Which solver to analyze")
+        parser.add_argument("policy", choices=list(POLICY_CONFIGS.keys()) + ["all"], help="Which policy to analyze")
         args = parser.parse_args()
-        selection = args.solver
+        selection = args.policy
 
     # Interactive Mode
     else:
@@ -1661,7 +1661,7 @@ if __name__ == "__main__":
         options = list(POLICY_CONFIGS.keys()) + ["all"]
 
         for i, opt in enumerate(options, 1):
-            name = "Analyze All Solvers" if opt == "all" else POLICY_CONFIGS[opt]["name"]
+            name = "Analyze All Policies" if opt == "all" else POLICY_CONFIGS[opt]["name"]
             print(f"{i}. {name} ({opt})")
 
         try:
