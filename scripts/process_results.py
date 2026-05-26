@@ -128,7 +128,7 @@ def analyze_performance(results_df, output_dir):
     
     per_instance_path = os.path.join(output_dir, "solver_time_per_instance.csv")
     per_instance_df.to_csv(per_instance_path, index=False)
-    print(f"   -> Guardado: {per_instance_path}")
+    print(f"-> Saved: {per_instance_path}")
 
     # 2. Calculate global statistics (mean, std, confidence interval)
     mean_val = per_instance_df["Avg_Solver_Time_Sec"].mean()
@@ -154,7 +154,7 @@ def analyze_performance(results_df, output_dir):
     
     summary_path = os.path.join(output_dir, "solver_time_summary.csv")
     summary_df.to_csv(summary_path, index=False)
-    print(f"   -> Guardado: {summary_path}")
+    print(f"-> Saved: {summary_path}")
 
 def analyze_outcomes(history_df, output_dir):
     """
@@ -248,7 +248,7 @@ def analyze_match_types(history_df, output_dir):
     if history_df.empty: 
         return
 
-    print("   -> Generating Match Structure Analysis (Cycles vs Chains)...")
+    print("Generating Match Structure Analysis (Cycles vs Chains)...")
 
     # Only keep "MATCHED" pairs for this analysis, and exclude altruists
     if "Description" in history_df.columns:
@@ -691,7 +691,7 @@ def analyze_waiting_times(history_df, output_dir):
 
         sum_path = os.path.join(output_dir, f"waittime_{filename_suffix}_summary.csv")
         summary_df.to_csv(sum_path, index=False)
-        print(f"      -> Saved Waiting Time Analysis: {filename_suffix}")
+        print(f"-> Saved Waiting Time Analysis: {filename_suffix}")
 
 
     # 1. General (All Matched Pairs)
